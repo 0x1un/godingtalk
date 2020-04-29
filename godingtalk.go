@@ -14,7 +14,7 @@ import (
 const (
 	ExpiresIn = 7200
 	OapiURL   = "oapi.dingtalk.com"
-	TokenFile = ".token.json"
+	TokenFile = ".token"
 )
 
 // 错误集合
@@ -67,7 +67,9 @@ func NewDingtalkClient(appkey, appsecret string) *DingtalkClient {
 	}
 }
 
+// setToken 获取到token后存入Client中并持久化存储到文本
 func (d *DingtalkClient) setToken() error {
+	// tr => tokenResponse
 	params := url.Values{}
 	access := AccessTokenResp{}
 	err := d.httpRequestWithStd("gettoken", params, nil, &access)
@@ -79,9 +81,16 @@ func (d *DingtalkClient) setToken() error {
 	}
 	d.AccessToken.Token = access.Token
 	d.AccessToken.ExpiresTime = time.Now().Unix() + ExpiresIn
+
+	err = storeToken(d.AccessToken)
+	if err != nil {
+		return err
+	}
 	return nil
 }
 
+// RefreshToken 刷新token,根据现有Client中的token判断
+// 暴露为外部可调用函数，方便手动刷新现有token的需求
 func (d *DingtalkClient) RefreshToken() error {
 	if d.AccessToken.Token == "" {
 		return ErrEmptyToken
@@ -112,11 +121,12 @@ func storeToken(tokenResp Unmarshalable) error {
 	return ioutil.WriteFile(TokenFile, data, 0666)
 }
 
-func readToken() (tokenResp Unmarshalable, err error) {
+func readToken() (Unmarshalable, error) {
 	bytes, err := ioutil.ReadFile(TokenFile)
 	if err != nil {
 		return nil, err
 	}
+	tokenResp := &AccessTokenResp{}
 	err = json.Unmarshal(bytes, tokenResp)
 	return tokenResp, err
 }
