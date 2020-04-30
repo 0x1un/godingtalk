@@ -85,31 +85,25 @@ func (d *DingtalkClient) setToken() error {
 	d.AccessToken.Token = access.Token
 	d.AccessToken.ExpiresTime = time.Now().Unix() + ExpiresIn
 
-	err = storeToken(d.AccessToken)
-	if err != nil {
-		return err
-	}
 	return nil
 }
 
 func (d *DingtalkClient) Init() error {
-	// 读取本地缓存文件.token
-	tokenResp, err := readToken()
-	if err != nil {
-		err = d.RefreshToken()
+	if d.AccessToken.Token == "" {
+		tr, err := readToken()
 		if err != nil {
-			return err
-		}
-		return nil
-	}
-
-	if tr, ok := tokenResp.(*AccessTokenResp); ok {
-		if checkExpireTime(tr.ExpiresTime) {
-			// to refresh token
-			err = d.RefreshToken()
-			if err != nil {
+			if err := d.setToken(); err != nil {
 				return err
 			}
+			if err := storeToken(d.AccessToken); err != nil {
+				return err
+			}
+			return nil
+		}
+		switch t := tr.(type) {
+		case *AccessTokenResp:
+			d.AccessToken.Token = t.Token
+			d.AccessToken.ExpiresTime = t.ExpiresTime
 		}
 	}
 	return nil
@@ -118,14 +112,7 @@ func (d *DingtalkClient) Init() error {
 // RefreshToken 刷新token,根据现有Client中的token判断
 // 暴露为外部可调用函数，方便手动刷新现有token的需求
 func (d *DingtalkClient) RefreshToken() error {
-	// if d.AccessToken.Token == "" {
-	// 	return ErrEmptyToken
-	// }
-	// token过期则重新获取token
-	if checkExpireTime(d.AccessToken.ExpiresTime) {
-		return d.setToken()
-	}
-	return ErrTokenAvaliable
+	return d.setToken()
 }
 
 // checkExpireTime 判断token是否过期
