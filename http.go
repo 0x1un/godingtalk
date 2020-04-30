@@ -13,10 +13,6 @@ var (
 	ErrEmptyParams = errors.New("params is require")
 )
 
-type Unmarshalable interface {
-	checkErr() error
-}
-
 func (rd RequestData) Set(key string, value interface{}) {
 	switch value := value.(type) {
 	case []interface{}:

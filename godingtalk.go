@@ -23,6 +23,10 @@ var (
 	ErrTokenAvaliable = errors.New("token is avaliable")
 )
 
+type Unmarshalable interface {
+	checkErr() error
+}
+
 type Base struct {
 	ErrCode int    `json:"errcode"`
 	ErrMsg  string `json:"errmsg"`
@@ -69,7 +73,6 @@ func NewDingtalkClient(appkey, appsecret string) *DingtalkClient {
 
 // setToken 获取到token后存入Client中并持久化存储到文本
 func (d *DingtalkClient) setToken() error {
-	// tr => tokenResponse
 	params := url.Values{}
 	access := AccessTokenResp{}
 	err := d.httpRequestWithStd("gettoken", params, nil, &access)
@@ -89,12 +92,35 @@ func (d *DingtalkClient) setToken() error {
 	return nil
 }
 
+func (d *DingtalkClient) Init() error {
+	// 读取本地缓存文件.token
+	tokenResp, err := readToken()
+	if err != nil {
+		err = d.RefreshToken()
+		if err != nil {
+			return err
+		}
+		return nil
+	}
+
+	if tr, ok := tokenResp.(*AccessTokenResp); ok {
+		if checkExpireTime(tr.ExpiresTime) {
+			// to refresh token
+			err = d.RefreshToken()
+			if err != nil {
+				return err
+			}
+		}
+	}
+	return nil
+}
+
 // RefreshToken 刷新token,根据现有Client中的token判断
 // 暴露为外部可调用函数，方便手动刷新现有token的需求
 func (d *DingtalkClient) RefreshToken() error {
-	if d.AccessToken.Token == "" {
-		return ErrEmptyToken
-	}
+	// if d.AccessToken.Token == "" {
+	// 	return ErrEmptyToken
+	// }
 	// token过期则重新获取token
 	if checkExpireTime(d.AccessToken.ExpiresTime) {
 		return d.setToken()
