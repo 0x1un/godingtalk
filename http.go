@@ -13,6 +13,12 @@ var (
 	ErrEmptyParams = errors.New("params is require")
 )
 
+type Marshallable interface {
+	ToBytes() ([]byte, error)
+}
+
+type RequestData map[string]interface{}
+
 func (rd RequestData) Set(key string, value interface{}) {
 	switch value := value.(type) {
 	case []interface{}:
@@ -23,16 +29,12 @@ func (rd RequestData) Set(key string, value interface{}) {
 }
 
 func (rd RequestData) ToBytes() ([]byte, error) {
-	byte, err := json.Marshal(rd)
-	if err != nil {
-		return nil, err
-	}
-	return byte, nil
+	return json.Marshal(rd)
 }
 
 // httpRequestWithStd 使用原生http实现
 // 以reqData为判断, nil == Get, !nil == Post
-func (d *DingtalkClient) httpRequestWithStd(path string, params url.Values, reqData interface{}, respData Unmarshalable) error {
+func (d *DingtalkClient) httpRequestWithStd(path string, params url.Values, reqData Marshallable, respData Unmarshalable) error {
 	if params == nil {
 		return ErrEmptyParams
 	}
@@ -60,12 +62,12 @@ func (d *DingtalkClient) httpRequestWithStd(path string, params url.Values, reqD
 // httpRequestWithFastHttp 使用fasthttp实现
 // func httpRequestWithFastHttp() {}
 
-func request(client *http.Client, uri string, reqData interface{}) ([]byte, error) {
+func request(client *http.Client, uri string, reqData Marshallable) ([]byte, error) {
 	var request *http.Request
 	var err error
 	if reqData != nil {
 		// POST
-		rd, err := reqData.(RequestData).ToBytes()
+		rd, err := reqData.ToBytes()
 		if err != nil {
 			return nil, err
 		}
