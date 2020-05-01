@@ -37,6 +37,7 @@ type DingtalkClient struct {
 	BaseURL     string
 	AppKey      string
 	AppSecret   string
+	params      url.Values
 	AccessToken AccessTokenResp
 }
 
@@ -49,8 +50,6 @@ type AccessTokenResp struct {
 	Base
 	AccessTokenContent
 }
-
-type RequestData map[string]interface{}
 
 // 为Base实现Unmarshallable接口，ErrorCode不为空，肯定为可Unmarshal的
 func (b Base) checkErr() error {
@@ -92,20 +91,27 @@ func (d *DingtalkClient) Init() error {
 	if d.AccessToken.Token == "" {
 		tr, err := readToken()
 		if err != nil {
-			if err := d.setToken(); err != nil {
-				return err
-			}
-			if err := storeToken(d.AccessToken); err != nil {
-				return err
-			}
-			return nil
+			goto GETTOKEN
 		}
 		switch t := tr.(type) {
 		case *AccessTokenResp:
-			d.AccessToken.Token = t.Token
-			d.AccessToken.ExpiresTime = t.ExpiresTime
+			if checkExpireTime(t.ExpiresTime) {
+				goto GETTOKEN
+			} else {
+				d.AccessToken.Token = t.Token
+				d.AccessToken.ExpiresTime = t.ExpiresTime
+			}
 		}
 	}
+GETTOKEN:
+	if err := d.setToken(); err != nil {
+		return err
+	}
+	if err := storeToken(d.AccessToken); err != nil {
+		return err
+	}
+	d.params = make(url.Values)
+	d.params.Set("access_token", d.AccessToken.Token)
 	return nil
 }
 

@@ -6,14 +6,31 @@ import (
 	"testing"
 )
 
-func TestOapiAuthScopesRequest(t *testing.T) {
-	client := NewDingtalkClient(os.Getenv("APPKEY"), os.Getenv("APPSECRET"))
+var (
+	client = NewDingtalkClient(os.Getenv("APPKEY"), os.Getenv("APPSECRET"))
+)
+
+func init() {
 	if err := client.Init(); err != nil {
-		t.Error(err)
+		panic(err)
 	}
+}
+
+func TestOapiAuthScopesRequest(t *testing.T) {
 	resp, err := client.OapiAuthScopesRequest()
 	if err != nil {
 		t.Error(err)
 	}
 	fmt.Println(resp)
+}
+
+func TestOapiGetUserRequest(t *testing.T) {
+	resp, err := client.OapiUserGetRequest("2749481918775803")
+	if err != nil {
+		t.Error(err)
+	}
+	fmt.Println(resp)
+}
+
+func TestGetTagName(t *testing.T) {
 }

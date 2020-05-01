@@ -3,7 +3,6 @@ package godingtalk
 import (
 	"encoding/json"
 	"fmt"
-	"net/url"
 	"reflect"
 )
 
@@ -19,6 +18,14 @@ type AuthScopesResp struct {
 type UserCreateResp struct {
 	Base
 	Userid string `json:"userid"`
+}
+
+type UserUpdateResp struct {
+	Base
+}
+
+type UserDeleteResp struct {
+	Base
 }
 
 type UserCreateReq struct {
@@ -45,51 +52,97 @@ type UserUpdateReq struct {
 		Age      string `json:"年龄"`
 	} `json:"extattr"` // 扩展属性，可以设置多种属性（手机上最多显示10个扩展属性.具体显示哪些属性，请到OA管理后台->设置->通讯录信息设置和OA管理后台->设置->手机端显示信息设置）。该字段的值支持链接类型填写，同时链接支持变量通配符自动替换，目前支持通配符有：userid，corpid。示例： [工位地址](http://www.dingtalk.com?userid=#userid#&corpid=#corpid#)
 }
+type UserGetResp struct {
+	Base
+	Unionid         string `json:"unionid"`
+	Remark          string `json:"remark"`
+	Userid          string `json:"userid"`
+	IsLeaderInDepts string `json:"isLeaderInDepts"`
+	IsBoss          bool   `json:"isBoss"`
+	HiredDate       int64  `json:"hiredDate"`
+	IsSenior        bool   `json:"isSenior"`
+	Tel             string `json:"tel"`
+	Department      []int  `json:"department"`
+	WorkPlace       string `json:"workPlace"`
+	Email           string `json:"email"`
+	OrderInDepts    string `json:"orderInDepts"`
+	Mobile          string `json:"mobile"`
+	Active          bool   `json:"active"`
+	Avatar          string `json:"avatar"`
+	IsAdmin         bool   `json:"isAdmin"`
+	IsHide          bool   `json:"isHide"`
+	Jobnumber       string `json:"jobnumber"`
+	Name            string `json:"name"`
+	Extattr         struct {
+	} `json:"extattr"`
+	StateCode string `json:"stateCode"`
+	Position  string `json:"position"`
+	Roles     []struct {
+		ID        int    `json:"id"`
+		Name      string `json:"name"`
+		GroupName string `json:"groupName"`
+	} `json:"roles"`
+}
 
-func (u *UserCreateReq) ToBytes() ([]byte, error) {
+func (u UserUpdateReq) ToBytes() ([]byte, error) {
 	return json.Marshal(u)
 
 }
 
 // OapiAuthScopesRequest 获取通讯录权限范围
-func (d *DingtalkClient) OapiAuthScopesRequest() (*AuthScopesResp, error) {
-	asr := &AuthScopesResp{}
-	params := url.Values{}
-	params.Set("access_token", d.AccessToken.Token)
-	err := d.httpRequestWithStd("auth/scopes", params, nil, asr)
+func (d *DingtalkClient) OapiAuthScopesRequest() (AuthScopesResp, error) {
+	var asr AuthScopesResp
+	err := d.httpRequestWithStd("auth/scopes", d.params, nil, &asr)
 	if err != nil {
-		return nil, err
+		return asr, err
 	}
 	return asr, nil
 }
 
-func (d *DingtalkClient) OapiUserCreateRequest(userInfo UserCreateReq) (respData *UserCreateResp, err error) {
-	params := url.Values{}
-	reqData := make(RequestData)
-	reqData.Set("userid", userInfo.Userid)
-	reqData.Set("name", userInfo.Name)
-	reqData.Set("orderInDepts", userInfo.OrderInDepts)
-	reqData.Set("department", userInfo.Department)
-	reqData.Set("position", userInfo.Position)
-	reqData.Set("mobile", userInfo.Mobile)
-	reqData.Set("tel", userInfo.Tel)
-	reqData.Set("workPlace", userInfo.WorkPlace)
-	reqData.Set("remark", userInfo.Remark)
-	reqData.Set("email", userInfo.Email)
-	reqData.Set("orgEmail", userInfo.OrgEmail)
-	reqData.Set("jobnumber", userInfo.Jobnumber)
-	reqData.Set("isHide", userInfo.IsHide)
-	reqData.Set("isSenior", userInfo.IsSenior)
-	reqData.Set("extattr", userInfo.Extattr)
-	params.Set("access_token", d.AccessToken.Token)
-	err = d.httpRequestWithStd("user/create", params, reqData, respData)
+// OapiUserCreateRequest 创建一个用户 Method: POST
+func (d *DingtalkClient) OapiUserCreateRequest(userInfo UserCreateReq) (UserCreateResp, error) {
+	var respData UserCreateResp
+	err := d.httpRequestWithStd("user/create", d.params, userInfo, respData)
 	if err != nil {
 		return respData, err
 	}
-	return respData, err
+	return respData, nil
 }
 
-// func (d *DingtalkClient) OapiUserUpdateRequest()
+// OapiUserUpdateRequest 更新用户的信息 Method: POST
+func (d *DingtalkClient) OapiUserUpdateRequest(userInfo UserUpdateReq) (UserUpdateResp, error) {
+	var respData UserUpdateResp
+	err := d.httpRequestWithStd("user/create", d.params, userInfo, respData)
+	if err != nil {
+		return respData, err
+	}
+	return respData, nil
+}
+
+// OapiUserDeleteRequest 删除一个用户 Method: GET
+func (d *DingtalkClient) OapiUserDeleteRequest(userid string) (UserDeleteResp, error) {
+	params := d.params
+	params.Set("userid", userid)
+	var respData UserDeleteResp
+	err := d.httpRequestWithStd("user/delete", params, nil, &respData)
+	if err != nil {
+		return respData, err
+	}
+	return respData, nil
+}
+
+// OapiUserGetRequest 获取一个用户的详情 Method: GET
+func (d *DingtalkClient) OapiUserGetRequest(userid string) (UserGetResp, error) {
+	params := d.params
+	params.Set("userid", userid)
+	var respData UserGetResp
+	err := d.httpRequestWithStd("user/get", params, nil, &respData)
+	if err != nil {
+		fmt.Println("xxx")
+		return respData, err
+	}
+	return respData, nil
+}
 
 func getTagName() {
 	s := &UserCreateReq{}
