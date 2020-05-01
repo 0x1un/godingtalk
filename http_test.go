@@ -1,6 +1,7 @@
 package godingtalk
 
 import (
+	"fmt"
 	"os"
 	"testing"
 )
@@ -10,4 +11,5 @@ func TestGetAccessToken(t *testing.T) {
 	if err := client.Init(); err != nil {
 		t.Error(err)
 	}
+	fmt.Println(client.params)
 }
