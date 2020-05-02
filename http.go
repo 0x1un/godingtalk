@@ -56,7 +56,7 @@ func (d *DingtalkClient) httpRequestWithStd(path string, params url.Values, reqD
 	if err := json.Unmarshal(data, respData); err != nil {
 		return err
 	}
-	return nil
+	return respData.checkErr()
 }
 
 // httpRequestWithFastHttp 使用fasthttp实现
