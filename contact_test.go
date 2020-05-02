@@ -29,8 +29,46 @@ func TestOapiGetUserRequest(t *testing.T) {
 	if err != nil {
 		t.Error(err)
 	}
+	fmt.Printf("%#v", resp)
+}
+
+// 105372678
+func TestUserGetDeptMemberReques(t *testing.T) {
+	resp, err := client.OapiUserGetDeptMemberRequest("105372678")
+	if err != nil {
+		t.Error(err)
+	}
 	fmt.Println(resp)
 }
 
-func TestGetTagName(t *testing.T) {
+func TestOapiUserSimplelistRequest(t *testing.T) {
+	resp, err := client.OapiUserSimplelistRequest("105372678", "0", "10")
+	if err != nil {
+		t.Error(err)
+	}
+	fmt.Println(resp)
+}
+
+func TestOapiUserListbypageRequest(t *testing.T) {
+
+	resp, err := client.OapiUserListbypageRequest("105372678", "0", "10", "entry_asc")
+	if err != nil {
+		t.Error(err)
+	}
+	fmt.Println(resp)
+}
+func TestOapiUserGetAdminRequest(t *testing.T) {
+	resp, err := client.OapiUserGetAdminRequest()
+	if err != nil {
+		t.Error(err)
+	}
+	fmt.Println(resp)
+}
+
+func TestOapiUserGetAdminScopeRequest(t *testing.T) {
+	resp, err := client.OapiUserGetAdminScopeRequest("2749481918775803")
+	if err != nil {
+		t.Error(err)
+	}
+	fmt.Println(resp)
 }
