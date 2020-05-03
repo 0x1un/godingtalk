@@ -72,3 +72,35 @@ func TestOapiUserGetAdminScopeRequest(t *testing.T) {
 	}
 	fmt.Println(resp)
 }
+
+func TestOapiUserGetUseridByUnionidReques(t *testing.T) {
+	resp, err := client.OapiUserGetUseridByUnionidRequest("xxxx")
+	if err != nil {
+		t.Error(err)
+	}
+	fmt.Println(resp)
+}
+
+func TestOapiUserGetByMobileRequest(t *testing.T) {
+	resp, err := client.OapiUserGetByMobileRequest("17608035126")
+	if err != nil {
+		t.Error(err)
+	}
+	fmt.Println(resp)
+}
+
+func TestOapiUserGetOrgUserCountRequest(t *testing.T) {
+	resp, err := client.OapiUserGetOrgUserCountRequest("1")
+	if err != nil {
+		t.Error(err)
+	}
+	fmt.Println(resp)
+}
+
+func TestOapiInactiveUserGetRequest(t *testing.T) {
+	resp, err := client.OapiInactiveUserGetRequest("20200503", "0", "100")
+	if err != nil {
+		t.Error(err)
+	}
+	fmt.Println(resp)
+}

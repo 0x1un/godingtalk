@@ -1,9 +1,5 @@
 package godingtalk
 
-import (
-	"encoding/json"
-)
-
 type AuthScopesResp struct {
 	Base
 	AuthUserField []string `json:"auth_user_field"`
@@ -50,6 +46,7 @@ type UserUpdateReq struct {
 		Age      string `json:"年龄"`
 	} `json:"extattr"` // 扩展属性，可以设置多种属性（手机上最多显示10个扩展属性.具体显示哪些属性，请到OA管理后台->设置->通讯录信息设置和OA管理后台->设置->手机端显示信息设置）。该字段的值支持链接类型填写，同时链接支持变量通配符自动替换，目前支持通配符有：userid，corpid。示例： [工位地址](http://www.dingtalk.com?userid=#userid#&corpid=#corpid#)
 }
+
 type UserGetResp struct {
 	Base
 	Unionid         string `json:"unionid"`
@@ -95,6 +92,7 @@ type UserSimplelistResp struct {
 		Name   string `json:"name"`
 	} `json:"userlist"`
 }
+
 type UserListbypageResp struct {
 	Base
 	HasMore  bool `json:"hasMore"`
@@ -131,140 +129,32 @@ type UserGetAdminResp struct {
 		Userid   string `json:"userid"`
 	} `json:"admin_list"`
 }
+
 type UserGetAdminScopeResp struct {
 	Base
 	DeptIds []int `json:"dept_ids"`
 }
 
-func (u UserUpdateReq) ToBytes() ([]byte, error) {
-	return json.Marshal(u)
-
+type UserGetUseridByUnionidResp struct {
+	Base
+	ContactType int    `json:"contactType"`
+	Userid      string `json:"userid"`
 }
 
-// OapiAuthScopesRequest 获取通讯录权限范围
-func (d *DingtalkClient) OapiAuthScopesRequest() (AuthScopesResp, error) {
-	var asr AuthScopesResp
-	err := d.httpRequestWithStd("auth/scopes", d.params, nil, &asr)
-	if err != nil {
-		return asr, err
-	}
-	return asr, nil
+type UserGetByMobileResp struct {
+	Base
+	Userid string `json:"userid"`
 }
 
-// OapiUserCreateRequest 创建一个用户 Method: POST
-func (d *DingtalkClient) OapiUserCreateRequest(userInfo UserCreateReq) (UserCreateResp, error) {
-	var respData UserCreateResp
-	err := d.httpRequestWithStd("user/create", d.params, userInfo, respData)
-	if err != nil {
-		return respData, err
-	}
-	return respData, nil
+type UserGetOrgUserCountResp struct {
+	Count int `json:"count"`
+	Base
 }
 
-// OapiUserUpdateRequest 更新用户的信息 Method: POST
-func (d *DingtalkClient) OapiUserUpdateRequest(userInfo UserUpdateReq) (UserUpdateResp, error) {
-	var respData UserUpdateResp
-	err := d.httpRequestWithStd("user/create", d.params, userInfo, respData)
-	if err != nil {
-		return respData, err
-	}
-	return respData, nil
-}
-
-// OapiUserDeleteRequest 删除一个用户 Method: GET
-func (d *DingtalkClient) OapiUserDeleteRequest(userid string) (UserDeleteResp, error) {
-	params := d.params
-	params.Set("userid", userid)
-	var respData UserDeleteResp
-	err := d.httpRequestWithStd("user/delete", params, nil, &respData)
-	if err != nil {
-		return respData, err
-	}
-	return respData, nil
-}
-
-// OapiUserGetRequest 获取一个用户的详情 Method: GET
-func (d *DingtalkClient) OapiUserGetRequest(userid string) (UserGetResp, error) {
-	params := d.params
-	params.Set("userid", userid)
-	var respData UserGetResp
-	err := d.httpRequestWithStd("user/get", params, nil, &respData)
-	if err != nil {
-		return respData, err
-	}
-	return respData, nil
-}
-
-//  OapiUserGetDeptMemberRequest 获取部门所有用户的userid Method: GET
-func (d *DingtalkClient) OapiUserGetDeptMemberRequest(depID string) (UserGetDeptMemberResp, error) {
-	params := d.params
-	params.Set("deptId", depID)
-	var respData UserGetDeptMemberResp
-	err := d.httpRequestWithStd("user/getDeptMember", params, nil, &respData)
-	if err != nil {
-		return respData, err
-	}
-	return respData, nil
-}
-
-// OapiUserSimplelistRequest 获取部门用户 Method: GET
-func (d *DingtalkClient) OapiUserSimplelistRequest(depID, offset, size string) (UserSimplelistResp, error) {
-	params := d.params
-	params.Set("department_id", depID)
-	params.Set("offset", offset)
-	params.Set("size", size)
-	var respData UserSimplelistResp
-	err := d.httpRequestWithStd("user/simplelist", params, nil, &respData)
-	if err != nil {
-		return respData, err
-	}
-	return respData, nil
-}
-
-/****************
-OapiUserListbypageRequest 获取部门用户的详情 Method: GET
-depID: 部门id，1表示根部门
-offset: 支持分页查询，与size参数同时设置时才生效，此参数代表偏移量，偏移量从0开始
-size: 支持分页查询，与offset参数同时设置时才生效，此参数代表分页大小，最大100
-order:
-	entry_asc：代表按照进入部门的时间升序，
-	entry_desc：代表按照进入部门的时间降序，
-	modify_asc：代表按照部门信息修改时间升序，
-	modify_desc：代表按照部门信息修改时间降序，
-	custom：代表用户定义(未定义时按照拼音)排序
-****************/
-func (d *DingtalkClient) OapiUserListbypageRequest(depID, offset, size, order string) (UserListbypageResp, error) {
-	params := d.params
-	params.Set("department_id", depID)
-	params.Set("offset", offset)
-	params.Set("size", size)
-	params.Set("order", order)
-	var respData UserListbypageResp
-	err := d.httpRequestWithStd("user/simplelist", params, nil, &respData)
-	if err != nil {
-		return respData, err
-	}
-	return respData, nil
-
-}
-
-func (d *DingtalkClient) OapiUserGetAdminRequest() (UserGetAdminResp, error) {
-	var respData UserGetAdminResp
-	err := d.httpRequestWithStd("user/get_admin", d.params, nil, &respData)
-	if err != nil {
-		return respData, err
-	}
-	return respData, nil
-}
-
-// OapiUserGetAdminScopeRequest 根据员工userid获取其所管理的部门 Method: GET
-func (d *DingtalkClient) OapiUserGetAdminScopeRequest(userid string) (UserGetAdminScopeResp, error) {
-	params := d.params
-	params.Set("userid", userid)
-	var respData UserGetAdminScopeResp
-	err := d.httpRequestWithStd("topapi/user/get_admin_scope", params, nil, &respData)
-	if err != nil {
-		return respData, err
-	}
-	return respData, nil
+type InactiveUserGetResp struct {
+	Base
+	Result struct {
+		HasMore bool     `json:"has_more"`
+		List    []string `json:"list"`
+	} `json:"result"`
 }
