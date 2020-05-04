@@ -1,14 +1,5 @@
 package godingtalk
 
-import (
-	"encoding/json"
-)
-
-func (u UserUpdateReq) ToBytes() ([]byte, error) {
-	return json.Marshal(u)
-
-}
-
 // OapiAuthScopesRequest 获取通讯录权限范围
 func (d *DingtalkClient) OapiAuthScopesRequest() (AuthScopesResp, error) {
 	var asr AuthScopesResp
@@ -22,7 +13,7 @@ func (d *DingtalkClient) OapiAuthScopesRequest() (AuthScopesResp, error) {
 // OapiUserCreateRequest 创建一个用户 Method: POST
 func (d *DingtalkClient) OapiUserCreateRequest(userInfo UserCreateReq) (UserCreateResp, error) {
 	var respData UserCreateResp
-	err := d.httpRequestWithStd("user/create", d.params, userInfo, respData)
+	err := d.httpRequestWithStd("user/create", d.params, userInfo, &respData)
 	if err != nil {
 		return respData, err
 	}
@@ -32,7 +23,7 @@ func (d *DingtalkClient) OapiUserCreateRequest(userInfo UserCreateReq) (UserCrea
 // OapiUserUpdateRequest 更新用户的信息 Method: POST
 func (d *DingtalkClient) OapiUserUpdateRequest(userInfo UserUpdateReq) (UserUpdateResp, error) {
 	var respData UserUpdateResp
-	err := d.httpRequestWithStd("user/create", d.params, userInfo, respData)
+	err := d.httpRequestWithStd("user/create", d.params, userInfo, &respData)
 	if err != nil {
 		return respData, err
 	}
@@ -75,12 +66,24 @@ func (d *DingtalkClient) OapiUserGetDeptMemberRequest(depID string) (UserGetDept
 	return respData, nil
 }
 
-// OapiUserSimplelistRequest 获取部门用户 Method: GET
-func (d *DingtalkClient) OapiUserSimplelistRequest(depID, offset, size string) (UserSimplelistResp, error) {
+/*
+OapiUserSimplelistRequest 获取部门用户 Method: GET
+depID: 部门id号
+offset: 支持分页查询，与size参数同时设置时才生效，此参数代表偏移量
+size: 支持分页查询，与offset参数同时设置时才生效，此参数代表分页大小，最大100
+order:
+	entry_asc：代表按照进入部门的时间升序，
+	entry_desc：代表按照进入部门的时间降序，
+	modify_asc：代表按照部门信息修改时间升序，
+	modify_desc：代表按照部门信息修改时间降序，
+	custom：代表用户定义(未定义时按照拼音)排序
+*/
+func (d *DingtalkClient) OapiUserSimplelistRequest(depID, offset, size, order string) (UserSimplelistResp, error) {
 	params := d.params
 	params.Set("department_id", depID)
 	params.Set("offset", offset)
 	params.Set("size", size)
+	params.Set("order", order)
 	var respData UserSimplelistResp
 	err := d.httpRequestWithStd("user/simplelist", params, nil, &respData)
 	if err != nil {
@@ -89,7 +92,7 @@ func (d *DingtalkClient) OapiUserSimplelistRequest(depID, offset, size string) (
 	return respData, nil
 }
 
-/****************
+/*
 OapiUserListbypageRequest 获取部门用户的详情 Method: GET
 depID: 部门id，1表示根部门
 offset: 支持分页查询，与size参数同时设置时才生效，此参数代表偏移量，偏移量从0开始
@@ -100,7 +103,7 @@ order:
 	modify_asc：代表按照部门信息修改时间升序，
 	modify_desc：代表按照部门信息修改时间降序，
 	custom：代表用户定义(未定义时按照拼音)排序
-****************/
+*/
 func (d *DingtalkClient) OapiUserListbypageRequest(depID, offset, size, order string) (UserListbypageResp, error) {
 	params := d.params
 	params.Set("department_id", depID)
@@ -116,6 +119,7 @@ func (d *DingtalkClient) OapiUserListbypageRequest(depID, offset, size, order st
 
 }
 
+// OapiUserGetAdminRequest 获取所有管理员
 func (d *DingtalkClient) OapiUserGetAdminRequest() (UserGetAdminResp, error) {
 	var respData UserGetAdminResp
 	err := d.httpRequestWithStd("user/get_admin", d.params, nil, &respData)
@@ -138,6 +142,7 @@ func (d *DingtalkClient) OapiUserGetAdminScopeRequest(userid string) (UserGetAdm
 }
 
 // OapiUserGetUseridByUnionidRequest 根据unionid获取userid Method: GET
+// unionid: 员工的unionid
 func (d *DingtalkClient) OapiUserGetUseridByUnionidRequest(unionid string) (UserGetUseridByUnionidResp, error) {
 	params := d.params
 	params.Set("unionid", unionid)
@@ -150,6 +155,7 @@ func (d *DingtalkClient) OapiUserGetUseridByUnionidRequest(unionid string) (User
 }
 
 // OapiUserGetByMobileRequest 根据手机号码获取用户userid Method: GET
+// mobile: 手机号码
 func (d *DingtalkClient) OapiUserGetByMobileRequest(mobile string) (UserGetByMobileResp, error) {
 	params := d.params
 	params.Set("mobile", mobile)
@@ -161,6 +167,8 @@ func (d *DingtalkClient) OapiUserGetByMobileRequest(mobile string) (UserGetByMob
 	return respData, nil
 }
 
+// OapiUserGetOrgUserCountRequest 获取企业员工人数 Method: GET
+// onlyActive: 0：包含未激活钉钉的人员数量 1：不包含未激活钉钉的人员数量
 func (d *DingtalkClient) OapiUserGetOrgUserCountRequest(onlyActive string) (UserGetOrgUserCountResp, error) {
 	params := d.params
 	params.Set("onlyActive", onlyActive)
@@ -176,10 +184,10 @@ func (d *DingtalkClient) OapiUserGetOrgUserCountRequest(onlyActive string) (User
 // querData: 20200503 日期格式
 // offset: 分页数据偏移量，从0开始
 // size: 每页大小，最大100
-func (d *DingtalkClient) OapiInactiveUserGetRequest(queryData, offset, size string) (InactiveUserGetResp, error) {
+func (d *DingtalkClient) OapiInactiveUserGetRequest(queryDate, offset, size string) (InactiveUserGetResp, error) {
 	reqData := &RequestData{}
 	var respData InactiveUserGetResp
-	reqData.Set("query_data", queryData)
+	reqData.Set("query_date", queryDate)
 	reqData.Set("offset", offset)
 	reqData.Set("size", size)
 	err := d.httpRequestWithStd("topapi/inactive/user/get", d.params, reqData, &respData)

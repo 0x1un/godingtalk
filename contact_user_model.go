@@ -1,5 +1,7 @@
 package godingtalk
 
+import "encoding/json"
+
 type AuthScopesResp struct {
 	Base
 	AuthUserField []string `json:"auth_user_field"`
@@ -157,4 +159,9 @@ type InactiveUserGetResp struct {
 		HasMore bool     `json:"has_more"`
 		List    []string `json:"list"`
 	} `json:"result"`
+}
+
+func (u UserUpdateReq) ToBytes() ([]byte, error) {
+	return json.Marshal(u)
+
 }
