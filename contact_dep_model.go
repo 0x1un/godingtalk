@@ -2,6 +2,7 @@ package godingtalk
 
 import "encoding/json"
 
+// DepartmentCreateReq 部门创建请求
 type DepartmentCreateReq struct {
 	Name             string `json:"name"`             // 部门名称，长度限制为1~64个字符，不允许包含字符‘-’‘，’以及‘,’
 	Parentid         string `json:"parentid"`         // 父部门id，根部门id为1
@@ -16,11 +17,25 @@ type DepartmentCreateReq struct {
 	SourceIdentifier string `json:"sourceIdentifier"` // 部门标识字段，开发者可用该字段来唯一标识一个部门，并与钉钉外部通讯录里的部门做映射
 	Ext              string `json:"ext"`              // 部门自定义字段，格式为文本类型的Json格式
 }
+
+// DepartmentCreateResp 部门创建响应
 type DepartmentCreateResp struct {
 	Base
 	ID int `json:"id"`
 }
 
+// DepartmentDeleteResp 部门删除响应
+type DepartmentDeleteResp struct {
+	Base
+}
+
+// DepartmentListIdsResp 子部门ID列表响应
+type DepartmentListIdsResp struct {
+	Base
+	SubDeptIDList []int `json:"sub_dept_id_list"`
+}
+
+// ToBytes 实现Marshallable接口
 func (d DepartmentCreateReq) ToBytes() ([]byte, error) {
 	return json.Marshal(d)
 }
