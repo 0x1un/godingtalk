@@ -22,7 +22,7 @@ func (d *DingtalkClient) OapiDepartmentDeleteRequest(id string) (DepartmentDelet
 	return respData, nil
 }
 
-// OapiDepartmentListIdsRequest 获取子部门ID列表
+// OapiDepartmentListIdsRequest 获取子部门ID列表 Method: GET
 func (d *DingtalkClient) OapiDepartmentListIdsRequest(id string) (DepartmentListIdsResp, error) {
 	params := d.params
 	params.Set("id", id)
