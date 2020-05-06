@@ -2,6 +2,7 @@ package godingtalk
 
 import "encoding/json"
 
+// AuthScopesResp 权限范围响应
 type AuthScopesResp struct {
 	Base
 	AuthUserField []string `json:"auth_user_field"`
@@ -11,24 +12,29 @@ type AuthScopesResp struct {
 	} `json:"auth_org_scopes"`
 }
 
+// UserCreateResp 用户创建响应
 type UserCreateResp struct {
 	Base
 	Userid string `json:"userid"`
 }
 
+// UserUpdateResp 用户更新响应
 type UserUpdateResp struct {
 	Base
 }
 
+// UserDeleteResp 用户删除响应
 type UserDeleteResp struct {
 	Base
 }
 
+// UserCreateReq 用户创建
 type UserCreateReq struct {
 	Mobile string `json:"mobile"` // 手机号码，企业内必须唯一，不可重复。如果是国际号码，请使用+xx-xxxxxx的格式
 	UserUpdateReq
 }
 
+// UserUpdateReq 用户信息更新
 type UserUpdateReq struct {
 	Userid       string `json:"userid"`       // 员工在当前企业内的唯一标识，也称staffId。可由企业在创建时指定，并代表一定含义比如工号，创建后不可修改，企业内必须唯一。长度为1~64个字符，如果不传，服务器将自动生成一个userid
 	Name         string `json:"name"`         // 必要, 用户名称
@@ -163,5 +169,4 @@ type InactiveUserGetResp struct {
 
 func (u UserUpdateReq) ToBytes() ([]byte, error) {
 	return json.Marshal(u)
-
 }

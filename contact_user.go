@@ -54,7 +54,7 @@ func (d *DingtalkClient) OapiUserGetRequest(userid string) (UserGetResp, error) 
 	return respData, nil
 }
 
-//  OapiUserGetDeptMemberRequest 获取部门所有用户的userid Method: GET
+// OapiUserGetDeptMemberRequest 获取部门所有用户的userid Method: GET
 func (d *DingtalkClient) OapiUserGetDeptMemberRequest(depID string) (UserGetDeptMemberResp, error) {
 	params := d.params
 	params.Set("deptId", depID)
