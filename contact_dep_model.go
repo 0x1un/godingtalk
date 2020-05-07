@@ -35,6 +35,47 @@ type DepartmentListIdsResp struct {
 	SubDeptIDList []int `json:"sub_dept_id_list"`
 }
 
+type DepartmentListResp struct {
+	Base
+	Department []struct {
+		ID              int    `json:"id"`
+		Name            string `json:"name"`
+		Parentid        int    `json:"parentid"`
+		CreateDeptGroup bool   `json:"createDeptGroup"`
+		AutoAddUser     bool   `json:"autoAddUser"`
+		Ext             string `json:"ext"`
+	} `json:"department"`
+}
+type DepartmentGetResp struct {
+	Base
+	ID                    int    `json:"id"`
+	Name                  string `json:"name"`
+	Order                 int    `json:"order"`
+	Parentid              int    `json:"parentid"`
+	CreateDeptGroup       bool   `json:"createDeptGroup"`
+	AutoAddUser           bool   `json:"autoAddUser"`
+	DeptHiding            bool   `json:"deptHiding"`
+	DeptPermits           string `json:"deptPermits"`
+	UserPermits           string `json:"userPermits"`
+	OuterDept             bool   `json:"outerDept"`
+	OuterPermitDepts      string `json:"outerPermitDepts"`
+	OuterPermitUsers      string `json:"outerPermitUsers"`
+	OrgDeptOwner          string `json:"orgDeptOwner"`
+	DeptManagerUseridList string `json:"deptManagerUseridList"`
+	SourceIdentifier      string `json:"sourceIdentifier"`
+	Ext                   string `json:"ext"`
+}
+
+type DepartmentListParentDeptsByDeptResp struct {
+	Base
+	ParentIds []int `json:"parentIds"`
+}
+
+type DepartmentListParentDeptsResp struct {
+	Base
+	Department [][]int `json:"department"`
+}
+
 // ToBytes 实现Marshallable接口
 func (d DepartmentCreateReq) ToBytes() ([]byte, error) {
 	return json.Marshal(d)

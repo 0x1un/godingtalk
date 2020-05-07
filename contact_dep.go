@@ -1,5 +1,7 @@
 package godingtalk
 
+import "strconv"
+
 // OapiDepartmentCreateRequest 创建一个部门 Method: POST
 func (d *DingtalkClient) OapiDepartmentCreateRequest(reqData DepartmentCreateReq) (DepartmentCreateResp, error) {
 	var respData DepartmentCreateResp
@@ -28,6 +30,54 @@ func (d *DingtalkClient) OapiDepartmentListIdsRequest(id string) (DepartmentList
 	params.Set("id", id)
 	var respData DepartmentListIdsResp
 	err := d.httpRequestWithStd("department/list_ids", params, nil, &respData)
+	if err != nil {
+		return respData, err
+	}
+	return respData, nil
+}
+
+// OapiDepartmentListRequest 获取部门列表 Method: GET
+// id 父部门id（如果不传，默认部门为根部门，根部门ID为1）
+// fetchChild 是否递归部门的全部子部门
+func (d *DingtalkClient) OapiDepartmentListRequest(id string, fetchChild bool) (DepartmentListResp, error) {
+	params := d.params
+	params.Set("id", id)
+	params.Set("fetch_child", strconv.FormatBool(fetchChild))
+	var respData DepartmentListResp
+	err := d.httpRequestWithStd("department/list", params, nil, &respData)
+	if err != nil {
+		return respData, err
+	}
+	return respData, nil
+}
+
+func (d *DingtalkClient) OapiDepartmentGetRequest(id string) (DepartmentGetResp, error) {
+	params := d.params
+	params.Set("id", id)
+	var respData DepartmentGetResp
+	err := d.httpRequestWithStd("department/get", params, nil, &respData)
+	if err != nil {
+		return respData, err
+	}
+	return respData, nil
+}
+
+func (d *DingtalkClient) OapiDepartmentListParentDeptsByDeptRequest(id string) (DepartmentListParentDeptsByDeptResp, error) {
+	params := d.params
+	params.Set("id", id)
+	var respData DepartmentListParentDeptsByDeptResp
+	err := d.httpRequestWithStd("department/list_parent_depts_by_dept", params, nil, &respData)
+	if err != nil {
+		return respData, err
+	}
+	return respData, nil
+}
+
+func (d *DingtalkClient) OapiDepartmentListParentDeptsRequest(userid string) (DepartmentListParentDeptsResp, error) {
+	params := d.params
+	params.Set("userId", userid)
+	var respData DepartmentListParentDeptsResp
+	err := d.httpRequestWithStd("department/list_parent_depts", params, nil, &respData)
 	if err != nil {
 		return respData, err
 	}
