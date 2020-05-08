@@ -1,15 +1,13 @@
 package godingtalk
 
-import "strconv"
+import (
+	"strconv"
+)
 
 // OapiDepartmentCreateRequest 创建一个部门 Method: POST
 func (d *DingtalkClient) OapiDepartmentCreateRequest(reqData DepartmentCreateReq) (DepartmentCreateResp, error) {
 	var respData DepartmentCreateResp
-	err := d.httpRequestWithStd("department/create", d.params, reqData, &respData)
-	if err != nil {
-		return respData, err
-	}
-	return respData, nil
+	return respData, rpc(d, "department/create", d.params, reqData, &respData)
 }
 
 // OapiDepartmentDeleteRequest 删除一个部门 Method: GET
@@ -17,11 +15,7 @@ func (d *DingtalkClient) OapiDepartmentDeleteRequest(id string) (DepartmentDelet
 	params := d.params
 	params.Set("id", id)
 	var respData DepartmentDeleteResp
-	err := d.httpRequestWithStd("department/delete", params, nil, &respData)
-	if err != nil {
-		return respData, err
-	}
-	return respData, nil
+	return respData, rpc(d, "department/delete", params, nil, &respData)
 }
 
 // OapiDepartmentListIdsRequest 获取子部门ID列表 Method: GET
@@ -29,11 +23,7 @@ func (d *DingtalkClient) OapiDepartmentListIdsRequest(id string) (DepartmentList
 	params := d.params
 	params.Set("id", id)
 	var respData DepartmentListIdsResp
-	err := d.httpRequestWithStd("department/list_ids", params, nil, &respData)
-	if err != nil {
-		return respData, err
-	}
-	return respData, nil
+	return respData, rpc(d, "department/list_ids", params, nil, &respData)
 }
 
 // OapiDepartmentListRequest 获取部门列表 Method: GET
@@ -44,42 +34,26 @@ func (d *DingtalkClient) OapiDepartmentListRequest(id string, fetchChild bool) (
 	params.Set("id", id)
 	params.Set("fetch_child", strconv.FormatBool(fetchChild))
 	var respData DepartmentListResp
-	err := d.httpRequestWithStd("department/list", params, nil, &respData)
-	if err != nil {
-		return respData, err
-	}
-	return respData, nil
+	return respData, rpc(d, "department/list", params, nil, &respData)
 }
 
 func (d *DingtalkClient) OapiDepartmentGetRequest(id string) (DepartmentGetResp, error) {
 	params := d.params
 	params.Set("id", id)
 	var respData DepartmentGetResp
-	err := d.httpRequestWithStd("department/get", params, nil, &respData)
-	if err != nil {
-		return respData, err
-	}
-	return respData, nil
+	return respData, rpc(d, "department/get", params, nil, &respData)
 }
 
 func (d *DingtalkClient) OapiDepartmentListParentDeptsByDeptRequest(id string) (DepartmentListParentDeptsByDeptResp, error) {
 	params := d.params
 	params.Set("id", id)
 	var respData DepartmentListParentDeptsByDeptResp
-	err := d.httpRequestWithStd("department/list_parent_depts_by_dept", params, nil, &respData)
-	if err != nil {
-		return respData, err
-	}
-	return respData, nil
+	return respData, rpc(d, "department/list_parent_depts_by_dept", params, nil, &respData)
 }
 
 func (d *DingtalkClient) OapiDepartmentListParentDeptsRequest(userid string) (DepartmentListParentDeptsResp, error) {
 	params := d.params
 	params.Set("userId", userid)
 	var respData DepartmentListParentDeptsResp
-	err := d.httpRequestWithStd("department/list_parent_depts", params, nil, &respData)
-	if err != nil {
-		return respData, err
-	}
-	return respData, nil
+	return respData, rpc(d, "department/list_parent_depts", params, nil, &respData)
 }
