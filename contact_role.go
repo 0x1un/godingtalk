@@ -13,9 +13,11 @@ func (r RoleListRequest) ToBytes() ([]byte, error) {
 
 func (d *DingtalkClient) OapiRoleListRequest(reqData RoleListRequest) (RoleListResp, error) {
 	var respData RoleListResp
-	err := d.httpRequestWithStd("topapi/role/list", d.params, reqData, &respData)
-	if err != nil {
-		return respData, err
-	}
-	return respData, nil
+	return respData, rpc(d, "topapi/role/list", d.params, reqData, &respData)
+}
+
+func (d *DingtalkClient) OapiRoleSimplelistRequest(roleID string) (RoleSimplelistResp, error) {
+	params := d.params
+	var respData RoleSimplelistResp
+	return respData, rpc(d, "topapi/role/simplelist", params, nil, &respData)
 }
