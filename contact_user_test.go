@@ -25,11 +25,11 @@ func TestOapiAuthScopesRequest(t *testing.T) {
 }
 
 func TestOapiGetUserRequest(t *testing.T) {
-	resp, err := client.OapiUserGetRequest("2749481918775803")
+	resp, err := client.OapiUserGetRequest("1519491135941375")
 	if err != nil {
 		t.Error(err)
 	}
-	fmt.Printf("%#v", resp)
+	fmt.Printf("%#v", resp.Name)
 }
 
 // 105372678
