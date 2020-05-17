@@ -11,7 +11,11 @@ func (r RoleListRequest) ToBytes() ([]byte, error) {
 	return json.Marshal(r)
 }
 
-func (d *DingtalkClient) OapiRoleListRequest(reqData RoleListRequest) (RoleListResp, error) {
+func (d *DingtalkClient) OapiRoleListRequest(size, offset int) (RoleListResp, error) {
+	reqData := RoleListRequest{
+		Size:   size,
+		Offset: offset,
+	}
 	var respData RoleListResp
 	return respData, rpc(d, "topapi/role/list", d.params, reqData, &respData)
 }

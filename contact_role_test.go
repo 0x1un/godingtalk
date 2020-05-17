@@ -6,7 +6,7 @@ import (
 )
 
 func TestOapiRoleListRequest(t *testing.T) {
-	resp, err := client.OapiRoleListRequest(RoleListRequest{Size: 20, Offset: 0})
+	resp, err := client.OapiRoleListRequest(20, 0)
 	if err != nil {
 		t.Error(err)
 	}
