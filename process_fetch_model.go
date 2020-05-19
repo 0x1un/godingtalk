@@ -36,3 +36,49 @@ type ProcessinstanceListidsResp struct {
 func (p ProcessinstanceListidsReq) ToBytes() ([]byte, error) {
 	return json.Marshal(p)
 }
+
+type ProcessinstanceGetReq struct {
+	ProcessInstanceID string `json:"process_instance_id"`
+}
+
+func (p ProcessinstanceGetReq) ToBytes() ([]byte, error) {
+	return json.Marshal(p)
+}
+
+type ProcessinstanceGetResp struct {
+	Base
+	ProcessInstance struct {
+		Title               string   `json:"title"`
+		CreateTime          string   `json:"create_time"`
+		FinishTime          string   `json:"finish_time"`
+		OriginatorUserid    string   `json:"originator_userid"`
+		OriginatorDeptID    string   `json:"originator_dept_id"`
+		Status              string   `json:"status"`
+		CcUserids           []string `json:"cc_userids"`
+		FormComponentValues []struct {
+			Name     string `json:"name"`
+			Value    string `json:"value"`
+			ExtValue string `json:"ext_value"`
+		} `json:"form_component_values"`
+		Result           string `json:"result"`
+		BusinessID       string `json:"business_id"`
+		OperationRecords []struct {
+			Userid          string `json:"userid"`
+			Date            string `json:"date"`
+			OperationType   string `json:"operation_type"`
+			OperationResult string `json:"operation_result"`
+			Remark          string `json:"remark"`
+		} `json:"operation_records"`
+		Tasks []struct {
+			Userid     string `json:"userid"`
+			TaskStatus string `json:"task_status"`
+			TaskResult string `json:"task_result"`
+			CreateTime string `json:"create_time"`
+			FinishTime string `json:"finish_time"`
+			Taskid     string `json:"taskid"`
+		} `json:"tasks"`
+		OriginatorDeptName         string   `json:"originator_dept_name"`
+		BizAction                  string   `json:"biz_action"`
+		AttachedProcessInstanceIds []string `json:"attached_process_instance_ids"`
+	} `json:"process_instance"`
+}

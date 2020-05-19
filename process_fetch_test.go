@@ -36,11 +36,22 @@ func TestOapiProcessinstanceListidsRequest(t *testing.T) {
 	}
 	for {
 		resp, err := client.OapiProcessinstanceListidsRequest(reqData)
-		if err == nil && resp.Result.NextCursor != 0 {
-			reqData.Cursor = resp.Result.NextCursor
-			fmt.Println(resp)
-			continue
+		if err == nil {
+			if resp.Result.NextCursor != 0 {
+				reqData.Cursor = resp.Result.NextCursor
+				fmt.Println(resp)
+			} else if resp.Result.NextCursor == 0 {
+				fmt.Println(resp)
+				break
+			}
 		}
-		break
 	}
+}
+
+func TestOapiProcessinstanceGetRequest(t *testing.T) {
+	resp, err := client.OapiProcessinstanceGetRequest("fbfc2a9c-fd8e-46ba-a09b-f232329a1ca5")
+	if err != nil {
+		t.Fatal(err)
+	}
+	fmt.Println(resp)
 }

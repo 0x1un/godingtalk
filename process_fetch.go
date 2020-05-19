@@ -18,3 +18,11 @@ func (d *DingtalkClient) OapiProcessinstanceListidsRequest(reqData Processinstan
 	var respData ProcessinstanceListidsResp
 	return respData, rpc(d, "topapi/processinstance/listids", d.params, reqData, &respData)
 }
+
+func (d *DingtalkClient) OapiProcessinstanceGetRequest(processInstanceID string) (ProcessinstanceGetResp, error) {
+	reqData := ProcessinstanceGetReq{
+		ProcessInstanceID: processInstanceID,
+	}
+	var respData ProcessinstanceGetResp
+	return respData, rpc(d, "topapi/processinstance/get", d.params, reqData, &respData)
+}
