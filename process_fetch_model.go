@@ -82,3 +82,16 @@ type ProcessinstanceGetResp struct {
 		AttachedProcessInstanceIds []string `json:"attached_process_instance_ids"`
 	} `json:"process_instance"`
 }
+
+type ProcessGettodonumResp struct {
+	Count int `json:"count"`
+	Base
+}
+
+type ProcessGettodonumReq struct {
+	UserID string `json:"user_id"`
+}
+
+func (p ProcessGettodonumReq) ToBytes() ([]byte, error) {
+	return json.Marshal(p)
+}

@@ -14,6 +14,8 @@
 
 package godingtalk
 
+import "fmt"
+
 func (d *DingtalkClient) OapiProcessinstanceListidsRequest(reqData ProcessinstanceListidsReq) (ProcessinstanceListidsResp, error) {
 	var respData ProcessinstanceListidsResp
 	return respData, rpc(d, "topapi/processinstance/listids", d.params, reqData, &respData)
@@ -25,4 +27,18 @@ func (d *DingtalkClient) OapiProcessinstanceGetRequest(processInstanceID string)
 	}
 	var respData ProcessinstanceGetResp
 	return respData, rpc(d, "topapi/processinstance/get", d.params, reqData, &respData)
+}
+
+// OapiProcessGettodonumRequest 获取用户待审批数量
+func (d *DingtalkClient) OapiProcessGettodonumRequest(userID string) (ProcessGettodonumResp, error) {
+	reqData := ProcessGettodonumReq{
+		UserID: userID,
+	}
+	data, err := reqData.ToBytes()
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(string(data))
+
+	return ProcessGettodonumResp{}, nil
 }

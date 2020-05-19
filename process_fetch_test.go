@@ -55,3 +55,11 @@ func TestOapiProcessinstanceGetRequest(t *testing.T) {
 	}
 	fmt.Println(resp)
 }
+
+func TestOapiProcessGettodonumRequest(t *testing.T) {
+	resp, err := client.OapiProcessGettodonumRequest("2749481918775803")
+	if err != nil {
+		t.Fatal(err)
+	}
+	fmt.Println(resp)
+}
