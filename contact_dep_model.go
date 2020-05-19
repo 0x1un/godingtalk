@@ -1,7 +1,5 @@
 package godingtalk
 
-import "encoding/json"
-
 // DepartmentCreateReq 部门创建请求
 type DepartmentCreateReq struct {
 	Name             string `json:"name"`             // 部门名称，长度限制为1~64个字符，不允许包含字符‘-’‘，’以及‘,’
@@ -74,9 +72,4 @@ type DepartmentListParentDeptsByDeptResp struct {
 type DepartmentListParentDeptsResp struct {
 	Base
 	Department [][]int `json:"department"`
-}
-
-// ToBytes 实现Marshallable接口
-func (d DepartmentCreateReq) ToBytes() ([]byte, error) {
-	return json.Marshal(d)
 }

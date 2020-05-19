@@ -14,8 +14,6 @@
 
 package godingtalk
 
-import "encoding/json"
-
 type ProcessinstanceListidsReq struct {
 	Cursor      int    `json:"cursor"`       // 分页查询的游标，最开始传0，后续传返回参数中的next_cursor值，默认值：0
 	StartTime   int64  `json:"start_time"`   // * 开始时间。Unix时间戳，单位毫秒。
@@ -33,16 +31,8 @@ type ProcessinstanceListidsResp struct {
 	} `json:"result"`
 }
 
-func (p ProcessinstanceListidsReq) ToBytes() ([]byte, error) {
-	return json.Marshal(p)
-}
-
 type ProcessinstanceGetReq struct {
 	ProcessInstanceID string `json:"process_instance_id"`
-}
-
-func (p ProcessinstanceGetReq) ToBytes() ([]byte, error) {
-	return json.Marshal(p)
 }
 
 type ProcessinstanceGetResp struct {
@@ -89,9 +79,37 @@ type ProcessGettodonumResp struct {
 }
 
 type ProcessGettodonumReq struct {
+	UserID string `json:"userid"`
+}
+
+type ProcessListbyuseridReq struct {
+	UserID string `json:"userid"`
+	Offset int64  `json:"offset"`
+	Size   int64  `json:"size"`
+}
+
+type ProcessListbyuseridResp struct {
+	Base
+	Result struct {
+		ProcessList []struct {
+			Name        string `json:"name"`
+			IconURL     string `json:"icon_url"`
+			ProcessCode string `json:"process_code"`
+			URL         string `json:"url"`
+		} `json:"process_list"`
+		NextCursor int `json:"next_cursor"`
+	} `json:"result"`
+}
+
+type ProcessinstanceCspaceInfoReq struct {
 	UserID string `json:"user_id"`
 }
 
-func (p ProcessGettodonumReq) ToBytes() ([]byte, error) {
-	return json.Marshal(p)
+type ProcessinstanceCspaceInfoResp struct {
+	Base
+	Result struct {
+		// 审批钉盘空间id
+		SpaceID int `json:"space_id"`
+	} `json:"result"`
+	Success bool `json:"success"`
 }

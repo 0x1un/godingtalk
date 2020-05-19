@@ -150,7 +150,7 @@ func readToken() (Unmarshalable, error) {
 	return tokenResp, err
 }
 
-func rpc(d *DingtalkClient, path string, params url.Values, reqData Marshallable, respData Unmarshalable) error {
+func rpc(d *DingtalkClient, path string, params url.Values, reqData interface{}, respData Unmarshalable) error {
 	if err := d.httpRequestWithStd(path, params, reqData, respData); err != nil {
 		return err
 	}

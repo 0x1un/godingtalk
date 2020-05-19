@@ -63,3 +63,19 @@ func TestOapiProcessGettodonumRequest(t *testing.T) {
 	}
 	fmt.Println(resp)
 }
+
+func TestOapiProcessListbyuseridRequest(t *testing.T) {
+	resp, err := client.OapiProcessListbyuseridRequest("2749481918775803", 0, 100)
+	if err != nil {
+		t.Fatal(err)
+	}
+	fmt.Println(resp)
+}
+
+func TestOapiProcessinstanceCspaceInfoRequest(t *testing.T) {
+	resp, err := client.OapiProcessinstanceCspaceInfoRequest("2749481918775803")
+	if err != nil {
+		t.Fatal(err)
+	}
+	fmt.Println(resp)
+}

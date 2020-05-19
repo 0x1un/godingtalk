@@ -1,9 +1,5 @@
 package godingtalk
 
-import (
-	"encoding/json"
-)
-
 type AttendanceListscheduleResp struct {
 	Result struct {
 		Schedules []struct {
@@ -26,10 +22,6 @@ type AttendanceListscheduleReq struct {
 	WorkDate string `json:"workDate"`
 	Offset   int    `json:"offset"`
 	Size     int    `json:"size"`
-}
-
-func (a AttendanceListscheduleReq) ToBytes() ([]byte, error) {
-	return json.Marshal(a)
 }
 
 type AttendanceScheduleListbydayResp struct {
@@ -89,10 +81,6 @@ type AttendanceScheduleListbydayReq struct {
 	DateTime int64  `json:"date_time"`
 }
 
-func (a AttendanceScheduleListbydayReq) ToBytes() ([]byte, error) {
-	return json.Marshal(a)
-}
-
 type AttendanceScheduleListbyusersResp AttendanceScheduleListbydayResp
 
 type AttendanceScheduleListbyusersReq struct {
@@ -100,10 +88,6 @@ type AttendanceScheduleListbyusersReq struct {
 	UserIDs      string `json:"userids"`
 	FromDateTime int64  `json:"from_date_time"`
 	ToDateTime   int64  `json:"to_date_time"`
-}
-
-func (a AttendanceScheduleListbyusersReq) ToBytes() ([]byte, error) {
-	return json.Marshal(a)
 }
 
 type AttendanceScheduleResultListbyidsResp struct {
@@ -132,8 +116,4 @@ type AttendanceScheduleResultListbyidsResp struct {
 type AttendanceScheduleResultListbyidsReq struct {
 	OpUserID    string `json:"op_user_id"`
 	ScheduleIDs string `json:"schedule_ids"`
-}
-
-func (a AttendanceScheduleResultListbyidsReq) ToBytes() ([]byte, error) {
-	return json.Marshal(a)
 }

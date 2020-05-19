@@ -14,13 +14,13 @@
 
 package godingtalk
 
-import "fmt"
-
+// OapiProcessinstanceListidsRequest 批量获取审批实例ID
 func (d *DingtalkClient) OapiProcessinstanceListidsRequest(reqData ProcessinstanceListidsReq) (ProcessinstanceListidsResp, error) {
 	var respData ProcessinstanceListidsResp
 	return respData, rpc(d, "topapi/processinstance/listids", d.params, reqData, &respData)
 }
 
+// OapiProcessinstanceGetRequest 获取审批实例详情
 func (d *DingtalkClient) OapiProcessinstanceGetRequest(processInstanceID string) (ProcessinstanceGetResp, error) {
 	reqData := ProcessinstanceGetReq{
 		ProcessInstanceID: processInstanceID,
@@ -34,11 +34,27 @@ func (d *DingtalkClient) OapiProcessGettodonumRequest(userID string) (ProcessGet
 	reqData := ProcessGettodonumReq{
 		UserID: userID,
 	}
-	data, err := reqData.ToBytes()
-	if err != nil {
-		panic(err)
-	}
-	fmt.Println(string(data))
+	var respData ProcessGettodonumResp
 
-	return ProcessGettodonumResp{}, nil
+	return respData, rpc(d, "topapi/process/gettodonum", d.params, reqData, &respData)
+}
+
+// OapiProcessListbyuseridRequest 获取用户可见的审批模板
+func (d *DingtalkClient) OapiProcessListbyuseridRequest(userID string, offset, size int64) (ProcessListbyuseridResp, error) {
+
+	reqData := ProcessListbyuseridReq{
+		UserID: userID,
+		Offset: offset,
+		Size:   size,
+	}
+	var respData ProcessListbyuseridResp
+	return respData, rpc(d, "topapi/process/listbyuserid", d.params, reqData, &respData)
+}
+
+func (d *DingtalkClient) OapiProcessinstanceCspaceInfoRequest(userID string) (ProcessinstanceCspaceInfoResp, error) {
+	reqData := ProcessinstanceCspaceInfoReq{
+		UserID: userID,
+	}
+	var respData ProcessinstanceCspaceInfoResp
+	return respData, rpc(d, "topapi/processinstance/cspace/info", d.params, reqData, &respData)
 }

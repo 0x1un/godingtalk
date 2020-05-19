@@ -14,8 +14,6 @@
 
 package godingtalk
 
-import "encoding/json"
-
 type ProcessInstanceApproverVo struct {
 	UserIDs        []string `json:"user_ids"`         // 0审批人userid列表。会签/或签列表长度必须大于1，非会签/或签列表长度只能为1
 	TaskActionType string   `json:"task_action_type"` //审批类型。AND表示会签，OR表示或签，NONE表示单人
@@ -44,10 +42,6 @@ type ProcessinstanceCreateReq struct {
 type ProcessinstanceCreateResp struct {
 	Base
 	ProcessInstanceID string `json:"process_instance_id"`
-}
-
-func (p ProcessinstanceCreateReq) ToBytes() ([]byte, error) {
-	return json.Marshal(p)
 }
 
 func (f *FormComponentValues) Add(key, value string) {

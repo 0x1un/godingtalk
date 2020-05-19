@@ -1,7 +1,5 @@
 package godingtalk
 
-import "encoding/json"
-
 // AuthScopesResp 权限范围响应
 type AuthScopesResp struct {
 	Base
@@ -165,8 +163,4 @@ type InactiveUserGetResp struct {
 		HasMore bool     `json:"has_more"`
 		List    []string `json:"list"`
 	} `json:"result"`
-}
-
-func (u UserUpdateReq) ToBytes() ([]byte, error) {
-	return json.Marshal(u)
 }
