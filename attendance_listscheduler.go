@@ -29,6 +29,7 @@ func (d *DingtalkClient) OapiAttendanceScheduleListbydayRequest(opUserID, userID
 
 }
 
+// OapiAttendanceScheduleListbyusersRequest 批量查询成员排班信息
 func (d *DingtalkClient) OapiAttendanceScheduleListbyusersRequest(opUserID, userIDs string, fromDateTime, toDateTime int64) (AttendanceScheduleListbyusersResp, error) {
 	reqData := AttendanceScheduleListbyusersReq{
 		OpUserID:     opUserID,
@@ -40,6 +41,7 @@ func (d *DingtalkClient) OapiAttendanceScheduleListbyusersRequest(opUserID, user
 	return respData, rpc(d, "topapi/attendance/schedule/listbyusers", d.params, reqData, &respData)
 }
 
+// OapiAttendanceScheduleResultListbyidsRequest 查询排班打卡结果
 func (d *DingtalkClient) OapiAttendanceScheduleResultListbyidsRequest(opUserID string, scheduleIDs string) (AttendanceScheduleResultListbyidsResp, error) {
 	reqData := AttendanceScheduleResultListbyidsReq{
 		OpUserID:    opUserID,
