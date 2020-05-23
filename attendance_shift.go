@@ -20,7 +20,9 @@ func (d *DingtalkClient) OapiAttendanceShiftQueryRequest(opUserID string, shiftI
 	return respData, rpc(d, "topapi/attendance/shift/query", d.params, reqData, &respData)
 }
 
-// 按名称搜索班次
+// OapiAttendanceShiftSearchRequest 按名称搜索班次
+// op_user_id 操作人userId
+// shift_name 班次名称
 func (d *DingtalkClient) OapiAttendanceShiftSearchRequest(opUserID, shiftName string) (AttendanceShiftSearchResp, error) {
 	reqData := AttendanceShiftSearchReq{
 		OpUserID:  opUserID,

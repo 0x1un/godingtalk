@@ -45,7 +45,7 @@ type AttendanceScheduleListbydayResp struct {
 		// 创建时间
 		GmtCreate string `json:"gmt_create"`
 		// 员工id
-		UserID string `json:"user_id"`
+		UserID string `json:"userid"`
 		// 排班绑定的假勤审批类型 1：加班，2：出差，3：请假
 		ApproveBizType int `json:"approve_biz_type"`
 		// 排班绑定的审批单id
