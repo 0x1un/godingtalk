@@ -85,9 +85,11 @@ order:
 func (d *DingtalkClient) OapiUserSimplelistRequest(depID string, offset , size int64, order string) (UserSimplelistResp, error) {
 	params := d.params
 	params.Set("department_id", depID)
-	params.Set("offset", strconv.FormatInt(offset, 10))
-	params.Set("size", strconv.FormatInt(size, 10))
 	params.Set("order", order)
+	if size != 0{
+		params.Set("offset", strconv.FormatInt(offset, 10))
+		params.Set("size", strconv.FormatInt(size, 10))
+	}
 	var respData UserSimplelistResp
 	err := d.httpRequestWithStd("user/simplelist", params, nil, &respData)
 	if err != nil {
