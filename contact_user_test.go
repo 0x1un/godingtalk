@@ -42,7 +42,7 @@ func TestUserGetDeptMemberReques(t *testing.T) {
 }
 
 func TestOapiUserSimplelistRequest(t *testing.T) {
-	resp, err := client.OapiUserSimplelistRequest("105372678", "0", "10", "entry_asc")
+	resp, err := client.OapiUserSimplelistRequest("105372678", 0, 10, "entry_asc")
 	if err != nil {
 		t.Error(err)
 	}
@@ -51,7 +51,7 @@ func TestOapiUserSimplelistRequest(t *testing.T) {
 
 func TestOapiUserListbypageRequest(t *testing.T) {
 
-	resp, err := client.OapiUserListbypageRequest("105372678", "0", "10", "entry_asc")
+	resp, err := client.OapiUserListbypageRequest("105372678", 0, 10, "entry_asc")
 	if err != nil {
 		t.Error(err)
 	}
