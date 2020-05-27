@@ -28,3 +28,11 @@ func TestOapiAttendanceGroupSearchRequest(t *testing.T) {
 	}
 	fmt.Println(resp)
 }
+
+func TestOapiAttendanceGroupQueryRequest(t *testing.T) {
+	resp, err := client.OapiAttendanceGroupQueryRequest("2749481918775803", 358535036)
+	if err != nil {
+		t.Fatal(err)
+	}
+	fmt.Println(resp)
+}

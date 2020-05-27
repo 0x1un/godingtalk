@@ -34,4 +34,18 @@ func (d *DingtalkClient)OapiAttendanceGroupSearchRequest(opUserID, groupName str
 	}
 	var respData AttendanceGroupSearchResp
 	return respData, rpc(d, "topapi/attendance/group/search", d.params, reqData, &respData)
+
+
+}
+
+func (d *DingtalkClient) OapiAttendanceGroupQueryRequest(opUserID string, groupID int) (AttendanceGroupQueryResp, error) {
+	reqData := struct {
+		OpUserID string `json:"op_user_id"`
+		GroupID int `json:"group_id"`
+	} {
+		OpUserID: opUserID,
+		GroupID: groupID,
+	}
+	var respData AttendanceGroupQueryResp
+	return respData, rpc(d, "topapi/attendance/group/query", d.params, reqData, &respData)
 }

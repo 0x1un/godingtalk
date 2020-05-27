@@ -70,3 +70,19 @@ type AttendanceGroupSearchResp struct {
 	} `json:"result"`
 	Base
 }
+
+type AttendanceGroupQueryResp struct {
+		Result struct {
+		Name        string   `json:"name"`
+		ID          int      `json:"id"`
+		Wifis       []string `json:"wifis"`
+		AddressList []string `json:"address_list"`
+		WorkDayList []int    `json:"work_day_list"`
+		MemberCount int      `json:"member_count"`
+		Type        string   `json:"type"`
+		URL         string   `json:"url"`
+		ManagerList string   `json:"manager_list"`
+	} `json:"result"`
+	Success bool   `json:"success"`
+	Base
+}
