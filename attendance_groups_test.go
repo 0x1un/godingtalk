@@ -1,8 +1,8 @@
 package godingtalk
 
 import (
-	"testing"
 	"fmt"
+	"testing"
 )
 
 func TestOapiAttendanceGetsimplegroupsRequest(t *testing.T) {
@@ -36,3 +36,16 @@ func TestOapiAttendanceGroupQueryRequest(t *testing.T) {
 	}
 	fmt.Println(resp)
 }
+
+func TestOapiAttendanceGetusergroupRequest(t *testing.T) {
+	resp, err := client.OapiAttendanceGetusergroupRequest("2749481918775803")
+	if err != nil {
+		t.Fatal(err)
+	}
+	for _, v := range resp.Result.Classes {
+		for _, v2 := range v.Sections {
+			fmt.Println(v.Name, v.ClassID, v2.Times[0].CheckTime, v2.Times[1].CheckTime)
+		}
+	}
+}
+
