@@ -3,6 +3,7 @@ package godingtalk
 import (
 	"fmt"
 	"testing"
+	"encoding/json"
 	"time"
 )
 
@@ -16,25 +17,30 @@ func TestOapiAttendanceListscheduleRequest(t *testing.T) {
 }
 
 func TestOapiAttendanceScheduleListbydayRequest(t *testing.T) {
-	ts := time.Now().AddDate(0, 0, 1)
+	ts := time.Now().AddDate(0, 0, 2)
 	resp, err := client.OapiAttendanceScheduleListbydayRequest("2749481918775803", "1519491135941375", ts.UnixNano()/1e6)
 	if err != nil {
 		t.Fatal(err)
 	}
-	fmt.Println(resp)
+	for _, v := range resp.Result {
+		fmt.Println(v.ClassName)
+	}
 }
 
 func TestOapiAttendanceScheduleListbyusersRequest(t *testing.T) {
-	ts := time.Now().AddDate(0, 0, 0)
+	ts := time.Now().AddDate(0, 0, 2)
 	resp, err := client.OapiAttendanceScheduleListbyusersRequest("2749481918775803", "2749481918775803,04553731381000121,6927611729781291,02155716671265668,2617504507699370,29616845081220641,322323373831091186,21604948491168487,095931334621426867,15163867091053091,0141304625714090,1519491135941375", ts.UnixNano()/1e6, ts.UnixNano()/1e6)
 	if err != nil {
 		t.Fatal(err)
 	}
-	y := make([]int, 100)
-	for _, x := range resp.Result {
-		y = append(y, x.ID)
+	data, err := json.Marshal(resp)
+	if err != nil{
+		panic(err)
 	}
-	fmt.Println(y)
+	fmt.Println(string(data))
+	for _, v := range resp.Result {
+		fmt.Println(v.ClassID)
+	}
 }
 
 func TestOapiAttendanceScheduleResultListbyidsRequest(t *testing.T) {
@@ -43,5 +49,7 @@ func TestOapiAttendanceScheduleResultListbyidsRequest(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	fmt.Println(resp)
+	for _, v := range resp.Result {
+		fmt.Println(v)
+	}
 }

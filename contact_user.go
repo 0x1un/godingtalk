@@ -1,5 +1,9 @@
 package godingtalk
 
+import (
+	"strconv"
+)
+
 // OapiAuthScopesRequest 获取通讯录权限范围
 func (d *DingtalkClient) OapiAuthScopesRequest() (AuthScopesResp, error) {
 	var asr AuthScopesResp
@@ -78,12 +82,14 @@ order:
 	modify_desc：代表按照部门信息修改时间降序，
 	custom：代表用户定义(未定义时按照拼音)排序
 */
-func (d *DingtalkClient) OapiUserSimplelistRequest(depID, offset, size, order string) (UserSimplelistResp, error) {
+func (d *DingtalkClient) OapiUserSimplelistRequest(depID string, offset , size int64, order string) (UserSimplelistResp, error) {
 	params := d.params
 	params.Set("department_id", depID)
-	params.Set("offset", offset)
-	params.Set("size", size)
 	params.Set("order", order)
+	if size != 0{
+		params.Set("offset", strconv.FormatInt(offset, 10))
+		params.Set("size", strconv.FormatInt(size, 10))
+	}
 	var respData UserSimplelistResp
 	err := d.httpRequestWithStd("user/simplelist", params, nil, &respData)
 	if err != nil {
@@ -104,11 +110,11 @@ order:
 	modify_desc：代表按照部门信息修改时间降序，
 	custom：代表用户定义(未定义时按照拼音)排序
 */
-func (d *DingtalkClient) OapiUserListbypageRequest(depID, offset, size, order string) (UserListbypageResp, error) {
+func (d *DingtalkClient) OapiUserListbypageRequest(depID string, offset, size int64, order string) (UserListbypageResp, error) {
 	params := d.params
 	params.Set("department_id", depID)
-	params.Set("offset", offset)
-	params.Set("size", size)
+	params.Set("offset", strconv.FormatInt(offset, 10))
+	params.Set("size", strconv.FormatInt(size, 10))
 	params.Set("order", order)
 	var respData UserListbypageResp
 	err := d.httpRequestWithStd("user/simplelist", params, nil, &respData)

@@ -115,6 +115,8 @@ GETTOKEN:
 	return nil
 }
 
+
+
 // RefreshToken 刷新token,根据现有Client中的token判断
 // 暴露为外部可调用函数，方便手动刷新现有token的需求
 func (d *DingtalkClient) RefreshToken() error {
