@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"errors"
+	"fmt"
 	"io/ioutil"
 	"net/http"
 	"net/url"
@@ -24,27 +25,29 @@ func (rd RequestData) Set(key string, value interface{}) {
 	rd[key] = value
 }
 
-// httpRequestWithStd 使用原生http实现
-// 以reqData为判断, nil == Get, !nil == Post
-func (d *DingtalkClient) httpRequestWithStd(path string, params url.Values, reqData interface{}, respData Unmarshalable) error {
+func httpRequest(cli *DingtalkClient, path string, params url.Values, reqData interface{}, respData Unmarshalable, flag bool) error {
+
 	if params == nil {
 		return ErrEmptyParams
 	}
-	client := d.Client
+	client := cli.Client
 	if params.Get("appkey") == "" {
-		params.Set("appkey", d.AppKey)
-		params.Set("appsecret", d.AppSecret)
-	}
-	if checkExpireTime(d.AccessToken.ExpiresTime) {
-		if err := d.RefreshToken(); err != nil {
-			return err
-		}
+		params.Set("appkey", cli.AppKey)
+		params.Set("appsecret", cli.AppSecret)
 	}
 	uri := &url.URL{
 		Scheme:   "https",
-		Host:     d.BaseURL,
+		Host:     cli.BaseURL,
 		Path:     path,
 		RawQuery: params.Encode(),
+	}
+	if flag {
+		if checkExpireTime(cli.AccessToken.ExpiresTime) {
+			if err := cli.RefreshToken(); err != nil {
+				return err
+			}
+			fmt.Println("refresh access token now")
+		}
 	}
 	data, err := request(client, uri.String(), reqData)
 	if err != nil {
@@ -54,6 +57,38 @@ func (d *DingtalkClient) httpRequestWithStd(path string, params url.Values, reqD
 		return err
 	}
 	return respData.checkErr()
+}
+
+// httpRequestWithStd 使用原生http实现
+// 以reqData为判断, nil == Get, !nil == Post
+func (d *DingtalkClient) httpRequestWithStd(path string, params url.Values, reqData interface{}, respData Unmarshalable) error {
+	return httpRequest(d, path, params, reqData, respData, true)
+}
+
+func (d *DingtalkClient) getNewAccessToken(path string, params url.Values, reqData interface{}, respData Unmarshalable) error {
+	return httpRequest(d, path, params, reqData, respData, false)
+	// if params == nil {
+	// 	return ErrEmptyParams
+	// }
+	// client := d.Client
+	// if params.Get("appkey") == "" {
+	// 	params.Set("appkey", d.AppKey)
+	// 	params.Set("appsecret", d.AppSecret)
+	// }
+	// uri := &url.URL{
+	// 	Scheme:   "https",
+	// 	Host:     d.BaseURL,
+	// 	Path:     path,
+	// 	RawQuery: params.Encode(),
+	// }
+	// data, err := request(client, uri.String(), reqData)
+	// if err != nil {
+	// 	return err
+	// }
+	// if err := json.Unmarshal(data, respData); err != nil {
+	// 	return err
+	// }
+	// return respData.checkErr()
 }
 
 // httpRequestWithFastHttp 使用fasthttp实现

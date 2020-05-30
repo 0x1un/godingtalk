@@ -25,20 +25,33 @@ func TestOapiAuthScopesRequest(t *testing.T) {
 }
 
 func TestOapiGetUserRequest(t *testing.T) {
-	resp, err := client.OapiUserGetRequest("1519491135941375")
-	if err != nil {
-		t.Error(err)
+	for i := 0; i < 10; i++ {
+		if i == 4 {
+			client.AccessToken.ExpiresTime = client.AccessToken.ExpiresTime - 7200 - 100 - 100
+		}
+		resp, err := client.OapiUserGetRequest("1519491135941375")
+		if err != nil {
+			t.Error(err.Error() + "ssssss")
+		}
+		fmt.Printf("%#v\n", resp.Name)
 	}
-	fmt.Printf("%#v", resp.Name)
 }
 
 // 105372678
 func TestUserGetDeptMemberReques(t *testing.T) {
-	resp, err := client.OapiUserGetDeptMemberRequest("105372678")
-	if err != nil {
-		t.Error(err)
+	for i := 0; i < 20; i++ {
+		if i == 4 {
+			client.AccessToken.ExpiresTime = client.AccessToken.ExpiresTime - 7200 - 100 - 100
+		}
+		if i == 16 {
+			client.AccessToken.ExpiresTime = client.AccessToken.ExpiresTime - 7200 - 100 - 100
+		}
+		resp, err := client.OapiUserGetDeptMemberRequest("105372678")
+		if err != nil {
+			t.Error(err)
+		}
+		fmt.Println(resp)
 	}
-	fmt.Println(resp)
 }
 
 func TestOapiUserSimplelistRequest(t *testing.T) {

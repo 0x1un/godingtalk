@@ -74,7 +74,7 @@ func NewDingtalkClient(appkey, appsecret string) *DingtalkClient {
 func (d *DingtalkClient) setToken() error {
 	params := url.Values{}
 	access := AccessTokenResp{}
-	err := d.httpRequestWithStd("gettoken", params, nil, &access)
+	err := d.getNewAccessToken("gettoken", params, nil, &access)
 	if err != nil {
 		return err
 	}
@@ -114,8 +114,6 @@ GETTOKEN:
 	d.params.Set("access_token", d.AccessToken.Token)
 	return nil
 }
-
-
 
 // RefreshToken 刷新token,根据现有Client中的token判断
 // 暴露为外部可调用函数，方便手动刷新现有token的需求
