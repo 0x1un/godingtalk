@@ -35,7 +35,7 @@ func (d *DingtalkClient) httpRequestWithStd(path string, params url.Values, reqD
 		params.Set("appkey", d.AppKey)
 		params.Set("appsecret", d.AppSecret)
 	}
-	if checkExpireTime(d.AccessToken) {
+	if checkExpireTime(d.AccessToken.ExpiresTime) {
 		if err := d.RefreshToken(); err != nil {
 			return err
 		}
