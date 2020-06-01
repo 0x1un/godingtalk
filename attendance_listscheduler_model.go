@@ -83,7 +83,22 @@ type AttendanceScheduleListbydayReq struct {
 	DateTime int64  `json:"date_time"`
 }
 
-type AttendanceScheduleListbyusersResp AttendanceScheduleListbydayResp
+type AttendanceScheduleListbyusersResp struct {
+	Base
+	RequestID string `json:"request_id"`
+	Result    []struct {
+		CheckType     string `json:"check_type,omitempty"`
+		GroupID       int    `json:"group_id"`
+		ID            int64  `json:"id"`
+		IsRest        string `json:"is_rest"`
+		PlanCheckTime string `json:"plan_check_time,omitempty"`
+		ShiftID       int    `json:"shift_id,omitempty"`
+		ShiftVersion  int    `json:"shift_version,omitempty"`
+		Userid        string `json:"userid"`
+		WorkDate      string `json:"work_date"`
+	} `json:"result"`
+	Success bool `json:"success"`
+}
 
 type AttendanceScheduleListbyusersReq struct {
 	OpUserID     string `json:"op_user_id"`
