@@ -69,7 +69,9 @@ type AttendanceScheduleListbydayResp struct {
 		// Y:当天排休
 		CheckBeginTime string `json:"check_begin_time"`
 		// 排班id
-		ID int `json:"id"`
+		ID        int    `json:"id"`
+		ShiftID   int64  `json:"shift_id"`
+		ShiftName string `json:"shift_name"`
 	} `json:"result"`
 	Success bool `json:"success"`
 	Base

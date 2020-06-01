@@ -1,9 +1,9 @@
 package godingtalk
 
 import (
+	"encoding/json"
 	"fmt"
 	"testing"
-	"encoding/json"
 	"time"
 )
 
@@ -23,7 +23,7 @@ func TestOapiAttendanceScheduleListbydayRequest(t *testing.T) {
 		t.Fatal(err)
 	}
 	for _, v := range resp.Result {
-		fmt.Println(v.ClassName)
+		fmt.Println(v)
 	}
 }
 
@@ -34,7 +34,7 @@ func TestOapiAttendanceScheduleListbyusersRequest(t *testing.T) {
 		t.Fatal(err)
 	}
 	data, err := json.Marshal(resp)
-	if err != nil{
+	if err != nil {
 		panic(err)
 	}
 	fmt.Println(string(data))
