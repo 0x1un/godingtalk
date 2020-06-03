@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"encoding/json"
 	"errors"
-	"fmt"
 	"io/ioutil"
 	"net/http"
 	"net/url"
@@ -46,7 +45,6 @@ func httpRequest(cli *DingtalkClient, path string, params url.Values, reqData in
 			if err := cli.RefreshToken(); err != nil {
 				return err
 			}
-			fmt.Println("refresh access token now")
 		}
 	}
 	data, err := request(client, uri.String(), reqData)
@@ -67,28 +65,6 @@ func (d *DingtalkClient) httpRequestWithStd(path string, params url.Values, reqD
 
 func (d *DingtalkClient) getNewAccessToken(path string, params url.Values, reqData interface{}, respData Unmarshalable) error {
 	return httpRequest(d, path, params, reqData, respData, false)
-	// if params == nil {
-	// 	return ErrEmptyParams
-	// }
-	// client := d.Client
-	// if params.Get("appkey") == "" {
-	// 	params.Set("appkey", d.AppKey)
-	// 	params.Set("appsecret", d.AppSecret)
-	// }
-	// uri := &url.URL{
-	// 	Scheme:   "https",
-	// 	Host:     d.BaseURL,
-	// 	Path:     path,
-	// 	RawQuery: params.Encode(),
-	// }
-	// data, err := request(client, uri.String(), reqData)
-	// if err != nil {
-	// 	return err
-	// }
-	// if err := json.Unmarshal(data, respData); err != nil {
-	// 	return err
-	// }
-	// return respData.checkErr()
 }
 
 // httpRequestWithFastHttp 使用fasthttp实现
