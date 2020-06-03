@@ -47,3 +47,12 @@ func TestOapiAttendanceScheduleResultListbyidsRequest(t *testing.T) {
 		fmt.Println(v)
 	}
 }
+
+func TestOapiAttendanceGetleavestatusRequest(t *testing.T) {
+	tm := time.Now()
+	resp, err := client.OapiAttendanceGetleavestatusRequest([]string{"2749481918775803","04553731381000121","6927611729781291","02155716671265668","2617504507699370","29616845081220641","322323373831091186","21604948491168487","095931334621426867","15163867091053091","0141304625714090","1519491135941375"}, tm.AddDate(0,0,0).UnixNano()/1e6, tm.AddDate(0, 0, 7).UnixNano()/1e6, 0, 20)
+	if err != nil {
+		t.Fatal(err)
+	}
+	fmt.Println(resp)
+}

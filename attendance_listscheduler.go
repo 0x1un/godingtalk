@@ -1,5 +1,7 @@
 package godingtalk
 
+import "strings"
+
 // OapiAttendanceListscheduleRequest 查询企业考勤排班详情
 // workDate 取值为日期 2020-01-01 00:00:00
 // offset 偏移位置，从0开始，后续传offset+size的值。当返回结果中的has_more为false时，表示没有多余的数据了。
@@ -53,4 +55,22 @@ func (d *DingtalkClient) OapiAttendanceScheduleResultListbyidsRequest(opUserID s
 	}
 	var respData AttendanceScheduleResultListbyidsResp
 	return respData, rpc(d, "topapi/attendance/schedule/result/listbyids", d.params, reqData, &respData)
+}
+
+func (d *DingtalkClient) OapiAttendanceGetleavestatusRequest(useridList []string, startTime, endTime, offset, size int64) (AttendanceGetleavestatusResp, error) {
+	reqData := struct {
+		UseridList string `json:"userid_list"`
+		StartTime int64 `json:"start_time"`
+		EndTime int64 `json:"end_time"`
+		Offset int64 `json:"offset"`
+		Size int64 `json:"size"`
+	}{
+		strings.Join(useridList, ","),
+		startTime,
+		endTime,
+		offset,
+		size,
+	}
+	var respData AttendanceGetleavestatusResp
+	return respData, rpc(d, "topapi/attendance/getleavestatus", d.params, reqData, &respData)
 }

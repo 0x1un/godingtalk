@@ -134,3 +134,18 @@ type AttendanceScheduleResultListbyidsReq struct {
 	OpUserID    string `json:"op_user_id"`
 	ScheduleIDs string `json:"schedule_ids"`
 }
+
+type AttendanceGetleavestatusResp struct {
+	Base
+	Result  struct {
+		HasMore     bool `json:"has_more"`
+		LeaveStatus []struct {
+			DurationUnit    string `json:"duration_unit"`
+			DurationPercent int    `json:"duration_percent"`
+			EndTime         int64  `json:"end_time"`
+			StartTime       int64  `json:"start_time"`
+			Userid          string `json:"userid"`
+		} `json:"leave_status"`
+	} `json:"result"`
+	Success bool `json:"success"`
+}
