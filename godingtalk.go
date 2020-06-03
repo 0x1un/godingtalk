@@ -75,12 +75,12 @@ func NewDingtalkClient(appkey, appsecret string) *DingtalkClient {
 func (d *DingtalkClient) setToken() error {
 	params := url.Values{}
 	access := AccessTokenResp{}
-	fmt.Println(d.AccessToken.Token)
+	fmt.Println(d.AccessToken.Token, d.AccessToken.ExpiresTime)
 	err := d.getNewAccessToken("gettoken", params, nil, &access)
 	if err != nil {
 		return err
 	}
-	fmt.Println(d.AccessToken.Token)
+	fmt.Println(d.AccessToken.Token, d.AccessToken.ExpiresTime)
 	if access.ErrCode != 0 {
 		return errors.New(access.ErrMsg)
 	}
