@@ -79,7 +79,6 @@ func (d *DingtalkClient) setToken() error {
 	if err != nil {
 		return err
 	}
-	fmt.Println(d.AccessToken.Token, d.AccessToken.ExpiresTime)
 	if access.ErrCode != 0 {
 		return errors.New(access.ErrMsg)
 	}
