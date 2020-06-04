@@ -132,3 +132,41 @@ type AttendanceGroupMemberuserListResp struct {
 	} `json:"result"`
 }
 
+
+type AttendanceGroupMemberListbyidsResp struct {
+	Base
+	Result  []string `json:"result"`
+}
+
+type AttendanceGroupMemberUpdateResp struct {
+	Base
+}
+
+type GroupMemberUpdateParam struct {
+	AddDepts []string `json:"add_depts"`
+	RemoveDepts []string `json:"remove_depts"`
+	AddUsers []string `json:"add_users"`
+	RemoveUsers []string `json:"remove_users"`
+	AddExtraUsers []string `json:"add_extra_users"`
+	RemoveExtraUser []string `json:"remove_extra_user"`
+}
+
+type AttendanceGroupMemberUpdateReq struct {
+	OpUserID string `json:"op_user_id"`
+	ScheduleFlag int64 `json:"schedule_flag"`
+	GroupID int64 `json:"group_id"`
+	UpdateParam GroupMemberUpdateParam `json:"Object"`
+}
+
+type AttendanceGroupMemberListResp struct {
+	Base
+	Result  struct {
+		HasMore bool        `json:"has_more"`
+		Cursor  interface{} `json:"cursor"`
+		Result  []struct {
+			AtcFlag  string `json:"atc_flag"`
+			Type     string `json:"type"`
+			MemberID string `json:"member_id"`
+		} `json:"result"`
+	} `json:"result"`
+}
