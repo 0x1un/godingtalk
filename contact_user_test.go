@@ -2,8 +2,10 @@ package godingtalk
 
 import (
 	"fmt"
+	"math/rand"
 	"os"
 	"testing"
+	"time"
 )
 
 var (
@@ -24,11 +26,18 @@ func TestOapiAuthScopesRequest(t *testing.T) {
 	fmt.Println(resp)
 }
 
+func random(min, max int) int {
+	rand.Seed(time.Now().Unix())
+	return rand.Intn(max-min) + min
+}
+
 func TestOapiGetUserRequest(t *testing.T) {
-	for i := 0; i < 10; i++ {
+	for i := 0; i < 20 ; i++ {
+
 		if i == 4 {
-			client.AccessToken.ExpiresTime = client.AccessToken.ExpiresTime - 7200 - 100 - 100
+			client.AccessToken.ExpiresTime = 10000000
 		}
+		time.Sleep(1 * time.Second)
 		resp, err := client.OapiUserGetRequest("1519491135941375")
 		if err != nil {
 			t.Error(err.Error() + "ssssss")
@@ -55,11 +64,16 @@ func TestUserGetDeptMemberReques(t *testing.T) {
 }
 
 func TestOapiUserSimplelistRequest(t *testing.T) {
-	resp, err := client.OapiUserSimplelistRequest("105372678", 0, 10, "entry_asc")
-	if err != nil {
-		t.Error(err)
+	for i:=0; i < 20 ; i ++ {
+		if i == 1 || i == 3 || i == 15 {
+			client.AccessToken.ExpiresTime = 0
+		}
+		resp, err := client.OapiUserSimplelistRequest("105372678", 0, 10, "entry_asc")
+		if err != nil {
+			t.Error(err)
+		}
+		fmt.Println(resp)
 	}
-	fmt.Println(resp)
 }
 
 func TestOapiUserListbypageRequest(t *testing.T) {

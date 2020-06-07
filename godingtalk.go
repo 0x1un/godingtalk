@@ -84,7 +84,6 @@ func (d *DingtalkClient) setToken() error {
 	}
 	d.AccessToken.Token = access.Token
 	d.AccessToken.ExpiresTime = time.Now().Unix() + ExpiresIn
-
 	return nil
 }
 
@@ -123,10 +122,13 @@ func (d *DingtalkClient) RefreshToken() error {
 }
 
 // checkExpireTime 判断token是否过期
+// if expire then return true
 func checkExpireTime(etime int64) bool {
 	if time.Now().Unix() < etime {
+		fmt.Println("当前时间＜过期时间")
 		return false
 	}
+	fmt.Println("当前时间＞过期时间")
 	return true
 }
 

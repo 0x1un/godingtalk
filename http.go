@@ -25,12 +25,10 @@ func (rd RequestData) Set(key string, value interface{}) {
 }
 
 func httpRequest(cli *DingtalkClient, path string, params url.Values, reqData interface{}, respData Unmarshalable, flag bool) error {
-
 	if params == nil {
 		return ErrEmptyParams
 	}
-	client := cli.Client
-	if params.Get("appkey") == "" {
+	if params.Get("appkey") == "" || params.Get("appsecret") == "" {
 		params.Set("appkey", cli.AppKey)
 		params.Set("appsecret", cli.AppSecret)
 	}
@@ -40,14 +38,12 @@ func httpRequest(cli *DingtalkClient, path string, params url.Values, reqData in
 		Path:     path,
 		RawQuery: params.Encode(),
 	}
-	if flag {
-		if checkExpireTime(cli.AccessToken.ExpiresTime) {
-			if err := cli.RefreshToken(); err != nil {
-				return err
-			}
+	if flag && checkExpireTime(cli.AccessToken.ExpiresTime) {
+		if err := cli.RefreshToken(); err != nil {
+			return err
 		}
 	}
-	data, err := request(client, uri.String(), reqData)
+	data, err := request(cli.Client, uri.String(), reqData)
 	if err != nil {
 		return err
 	}
@@ -67,11 +63,8 @@ func (d *DingtalkClient) getNewAccessToken(path string, params url.Values, reqDa
 	return httpRequest(d, path, params, reqData, respData, false)
 }
 
-// httpRequestWithFastHttp 使用fasthttp实现
-// func httpRequestWithFastHttp() {}
-
 func request(client *http.Client, uri string, reqData interface{}) ([]byte, error) {
-	var request *http.Request
+	var req *http.Request
 	var err error
 	if reqData != nil {
 		// POST
@@ -79,19 +72,19 @@ func request(client *http.Client, uri string, reqData interface{}) ([]byte, erro
 		if err != nil {
 			return nil, err
 		}
-		request, err = http.NewRequest(http.MethodPost, uri, bytes.NewReader(rd))
+		req, err = http.NewRequest(http.MethodPost, uri, bytes.NewReader(rd))
 		if err != nil {
 			return nil, err
 		}
-		request.Header.Set("Content-Type", "application/json")
+		req.Header.Set("Content-Type", "application/json")
 	} else {
 		// GET
-		request, err = http.NewRequest(http.MethodGet, uri, nil)
+		req, err = http.NewRequest(http.MethodGet, uri, nil)
 		if err != nil {
 			return nil, err
 		}
 	}
-	response, err := client.Do(request)
+	response, err := client.Do(req)
 	if err != nil {
 		return nil, err
 	}
