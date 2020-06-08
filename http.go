@@ -42,6 +42,7 @@ func httpRequest(cli *DingtalkClient, path string, params url.Values, reqData in
 		if err := cli.RefreshToken(); err != nil {
 			return err
 		}
+		params.Set("access_token", cli.AccessToken.Token)
 	}
 	data, err := request(cli.Client, uri.String(), reqData)
 	if err != nil {
