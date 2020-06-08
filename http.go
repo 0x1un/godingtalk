@@ -32,17 +32,17 @@ func httpRequest(cli *DingtalkClient, path string, params url.Values, reqData in
 		params.Set("appkey", cli.AppKey)
 		params.Set("appsecret", cli.AppSecret)
 	}
-	uri := &url.URL{
-		Scheme:   "https",
-		Host:     cli.BaseURL,
-		Path:     path,
-		RawQuery: params.Encode(),
-	}
 	if flag && checkExpireTime(cli.AccessToken.ExpiresTime) {
 		if err := cli.RefreshToken(); err != nil {
 			return err
 		}
 		params.Set("access_token", cli.AccessToken.Token)
+	}
+	uri := &url.URL{
+		Scheme:   "https",
+		Host:     cli.BaseURL,
+		Path:     path,
+		RawQuery: params.Encode(),
 	}
 	data, err := request(cli.Client, uri.String(), reqData)
 	if err != nil {
