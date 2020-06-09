@@ -125,10 +125,8 @@ func (d *DingtalkClient) RefreshToken() error {
 // if expire then return true
 func checkExpireTime(etime int64) bool {
 	if time.Now().Unix() < etime {
-		fmt.Println("当前时间＜过期时间")
 		return false
 	}
-	fmt.Println("当前时间＞过期时间")
 	return true
 }
 
