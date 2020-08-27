@@ -44,7 +44,7 @@ type ProcessinstanceCreateResp struct {
 	ProcessInstanceID string `json:"process_instance_id"`
 }
 
-func (f *FormComponentValues) Add(key, value string) {
+func (f *FormComponentValues) Add(key, value interface{}) {
 	*f = append(*f, FormComponentValue{
 		Name:  key,
 		Value: value,
