@@ -22,9 +22,9 @@ type ProcessInstanceApproverVo struct {
 type FormComponentValues []FormComponentValue
 
 type FormComponentValue struct {
-	Name     string `json:"name"`      // 表单控件每一栏的名称
-	Value    string `json:"value"`     // 表单控件每一栏的值
-	ExtValue string `json:"ext_value"` // 扩展值
+	Name     interface{} `json:"name"`      // 表单控件每一栏的名称
+	Value    interface{} `json:"value"`     // 表单控件每一栏的值
+	ExtValue interface{} `json:"ext_value"` // 扩展值
 }
 
 type ProcessinstanceCreateReq struct {
